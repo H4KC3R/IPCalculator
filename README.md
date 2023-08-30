@@ -1,6 +1,6 @@
 # IPCalculator
 Simple IPv4 calculator based on C++ and Qt framework
-
+QT6 core based
 
 ## Features
 - Determining IP address type (host, network, broadcast).
