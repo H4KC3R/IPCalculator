@@ -1,8 +1,11 @@
-#include "win.h"
+﻿#include "win.h"
 #include "ui_win.h"
 #include <iostream>
 #include <bitset>
 #include <math.h>
+
+#include <QStringView>
+
 using namespace std;
 
 win::win(QWidget *parent) :QMainWindow(parent), ui(new Ui::win)
@@ -57,7 +60,8 @@ void win::calculate(QString& IPbinary)
     unsigned short int mask = ui->lineEdit_Mask->text().toInt();
 
     // ################## ADDRESS TYPE ################
-    QString hostPortion = QStringRef(&IPbinary, mask, 32-mask).toUtf8();
+
+    QString hostPortion = QStringView(IPbinary).sliced(mask, 32-mask).toUtf8();
 
     if (hostPortion.contains("0") && hostPortion.contains("1"))
         ui->label_type->setText("Host");
@@ -71,7 +75,7 @@ void win::calculate(QString& IPbinary)
 
 
     // Determine network portion
-    QString netPortion = QStringRef(&IPbinary, 0, mask).toString();
+    QString netPortion = QStringView(IPbinary).sliced(0, mask).toString();
 
     // ############## NETWORK ADDRESS ##################
     QString netAddress = netPortion + QString("0").repeated(32-mask);
@@ -106,7 +110,7 @@ QString win::binaryOctetsToDecimal(QString& IPbinary)
     QStringList netAddressList;
     for (int i = 0; i < 32; i+=8)
     {
-        QString intOctet = QString::number(QStringRef(&IPbinary, i, 8).toString().toInt(nullptr, 2));
+        QString intOctet = QString::number(QStringView(IPbinary).sliced(i, 8).toString().toInt(nullptr, 2));
         netAddressList.append(intOctet);
     }
 
